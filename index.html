@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroCarb Sauce - רטבים לסלט דלי קלוריות וללא פחמימות</title>
+    <!-- טעינת Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- טעינת גופן Heebo מותאם לעברית -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- טעינת אייקונים מ-Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Heebo', 'sans-serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-emerald-200 selection:text-emerald-900 min-h-screen flex flex-col">
+
+    <!-- סרגל ניווט עליון -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-emerald-600 text-white p-2 rounded-xl shadow-md shadow-emerald-600/20">
+                    <i data-lucide="leaf" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-slate-900 leading-none">קליל & טעים</h1>
+                    <span class="text-xs font-medium text-emerald-600">רטבים דלי קלוריות • 0 סוכר • 0 פחמימות</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="openCustomBuilder()" class="flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-3.5 py-2 rounded-xl text-sm transition-colors border border-emerald-200">
+                    <i data-lucide="wand-2" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">הרכב רוטב אישי</span>
+                    <span class="sm:hidden">הרכבה אישית</span>
+                </button>
+                <button onclick="toggleFavoritesFilter()" id="fav-filter-btn" class="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3.5 py-2 rounded-xl text-sm transition-colors">
+                    <i data-lucide="heart" class="w-4 h-4 text-rose-500"></i>
+                    <span id="fav-count" class="bg-white px-1.5 py-0.5 rounded-md text-xs font-bold shadow-sm">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- תוכן ראשי -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- שורת חיפוש -->
+        <div class="relative max-w-xl mx-auto mb-6">
+            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+                <i data-lucide="search" class="w-5 h-5"></i>
+            </div>
+            <input type="text" id="search-input" oninput="filterRecipes()" placeholder="חפשו רוטב או מרכיב (למשל: חרדל, שום, נענע, טחינה...)" 
+                class="w-full pr-12 pl-10 py-3 rounded-2xl bg-white text-slate-800 placeholder-slate-400 border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm sm:text-base transition-all">
+            <button id="clear-search" onclick="clearSearch()" class="hidden absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600">
+                <i data-lucide="x-circle" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- סינון לפי קטגוריות -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar" id="category-filters">
+            <button onclick="setCategory('all')" data-cat="all" class="cat-btn active shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-emerald-600 text-white shadow-md shadow-emerald-600/20">
+                הכל (12)
+            </button>
+            <button onclick="setCategory('vinaigrette')" data-cat="vinaigrette" class="cat-btn shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                ויניגרט ומרעננים
+            </button>
+            <button onclick="setCategory('creamy')" data-cat="creamy" class="cat-btn shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                קרמיים ועשירים
+            </button>
+            <button onclick="setCategory('asian')" data-cat="asian" class="cat-btn shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                ניחוח אסייתי
+            </button>
+            <button onclick="setCategory('herbs')" data-cat="herbs" class="cat-btn shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                עשבי תיבול ושום
+            </button>
+            <button onclick="setCategory('zero-cal')" data-cat="zero-cal" class="cat-btn shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                כמעט 0 קלוריות!
+            </button>
+        </div>
+
+        <!-- סטטוס תוצאות -->
+        <div class="flex justify-between items-center mb-6">
+            <h3 id="results-title" class="text-lg font-bold text-slate-800">כל הרטבים</h3>
+            <span id="results-count" class="text-sm text-slate-500 font-medium">מציג 12 מתכונים</span>
+        </div>
+
+        <!-- רשת כרטיסיות מתכונים -->
+        <div id="recipes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- הכרטיסיות יוזרקו לכאן באמצעות JS -->
+        </div>
+
+        <!-- הודעה כשאין תוצאות -->
+        <div id="empty-state" class="hidden text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm">
+            <div class="bg-slate-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-400">
+                <i data-lucide="search-x" class="w-8 h-8"></i>
+            </div>
+            <h4 class="text-lg font-bold text-slate-800 mb-1">לא נמצאו רטבים תואמים</h4>
+            <p class="text-slate-500 text-sm mb-4">נסו לחפש מילה אחרת או לאפס את המסננים.</p>
+            <button onclick="resetAllFilters()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors">
+                הצג את כל הרטבים
+            </button>
+        </div>
+    </main>
+
+    <!-- מודאל פרטי מתכון -->
+    <div id="recipe-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl transform transition-all my-8">
+            <!-- כותרת עליונה של המודאל -->
+            <div id="modal-header-bg" class="p-6 text-white relative">
+                <button onclick="closeModal('recipe-modal')" class="absolute top-4 left-4 bg-black/20 hover:bg-black/30 text-white p-2 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <div class="flex items-center gap-2 mb-2">
+                    <span id="modal-category" class="text-xs font-bold uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-lg backdrop-blur-sm">קטגוריה</span>
+                    <span id="modal-prep-time" class="text-xs font-medium bg-black/20 px-2.5 py-1 rounded-lg flex items-center gap-1">
+                        <i data-lucide="clock" class="w-3.5 h-3.5"></i> 3 דק'
+                    </span>
+                </div>
+                <h3 id="modal-title" class="text-2xl sm:text-3xl font-extrabold mb-1">שם הרוטב</h3>
+                <p id="modal-desc" class="text-white/90 text-sm">תיאור קצר של הרוטב</p>
+            </div>
+
+            <!-- גוף המודאל -->
+            <div class="p-6">
+                <!-- ערכים תזונתיים למנה -->
+                <div class="grid grid-cols-4 gap-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-100 mb-6 text-center">
+                    <div>
+                        <span class="block text-xs text-slate-500 font-medium">קלוריות</span>
+                        <span id="modal-cal" class="text-lg font-extrabold text-emerald-600">12</span>
+                    </div>
+                    <div class="border-r border-slate-200">
+                        <span class="block text-xs text-slate-500 font-medium">פחמימות</span>
+                        <span id="modal-carbs" class="text-lg font-extrabold text-slate-800">0.2ג'</span>
+                    </div>
+                    <div class="border-r border-slate-200">
+                        <span class="block text-xs text-slate-500 font-medium">סוכרים</span>
+                        <span class="text-lg font-extrabold text-slate-800">0ג'</span>
+                    </div>
+                    <div class="border-r border-slate-200">
+                        <span class="block text-xs text-slate-500 font-medium">שומן</span>
+                        <span id="modal-fat" class="text-lg font-extrabold text-slate-800">1ג'</span>
+                    </div>
+                </div>
+
+                <!-- בורר כמות מנות -->
+                <div class="flex items-center justify-between mb-4 bg-emerald-50/70 px-4 py-2.5 rounded-xl border border-emerald-100">
+                    <span class="text-sm font-bold text-emerald-900">התאמת כמות מנות (כפות):</span>
+                    <div class="flex items-center gap-3">
+                        <button onclick="changeServings(-1)" class="w-8 h-8 rounded-lg bg-white text-emerald-700 font-bold shadow-sm hover:bg-emerald-100 flex items-center justify-center transition-colors">-</button>
+                        <span id="servings-display" class="font-extrabold text-emerald-900 w-6 text-center">2</span>
+                        <button onclick="changeServings(1)" class="w-8 h-8 rounded-lg bg-white text-emerald-700 font-bold shadow-sm hover:bg-emerald-100 flex items-center justify-center transition-colors">+</button>
+                    </div>
+                </div>
+
+                <!-- רשימת מצרכים -->
+                <div class="mb-6">
+                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <i data-lucide="shopping-basket" class="w-4 h-4 text-emerald-600"></i>
+                        מצרכים נדרשים
+                    </h4>
+                    <ul id="modal-ingredients" class="space-y-2 text-sm text-slate-700">
+                        <!-- יוזרק דינמית -->
+                    </ul>
+                </div>
+
+                <!-- אופן ההכנה -->
+                <div class="mb-6">
+                    <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <i data-lucide="chef-hat" class="w-4 h-4 text-emerald-600"></i>
+                        אופן ההכנה
+                    </h4>
+                    <p id="modal-instructions" class="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        הוראות הכנה...
+                    </p>
+                </div>
+
+                <!-- כפתורי פעולה תחתונים -->
+                <div class="flex gap-3 pt-2 border-t border-slate-100">
+                    <button onclick="copyRecipeToClipboard()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                        העתק מתכון
+                    </button>
+                    <button id="modal-fav-btn" onclick="toggleCurrentModalFav()" class="px-4 py-3 rounded-xl border border-slate-200 hover:bg-rose-50 text-slate-600 transition-colors flex items-center justify-center">
+                        <i data-lucide="heart" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודאל הרכבת רוטב אישי (Custom Builder) -->
+    <div id="builder-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl p-6 my-8">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="bg-emerald-100 text-emerald-700 p-2 rounded-xl">
+                        <i data-lucide="wand-2" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-slate-900">מעבדת הרטבים האישית</h3>
+                </div>
+                <button onclick="closeModal('builder-modal')" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <p class="text-sm text-slate-500 mb-5">בחרו בסיס, חמיצות ותיבול – והמערכת תחשב עבורכם את הערכים המדויקים (תמיד ללא סוכר ופחמימות!).</p>
+
+            <div class="space-y-4 mb-6">
+                <!-- שלב 1: בסיס -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">1. בחרו בסיס (2 כפות)</label>
+                    <select id="build-base" onchange="calculateCustomSauce()" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="water" data-cal="0" data-fat="0" data-name="מים קרים + חרדל דיז'ון (בסיס 0 קלוריות)">מים קרים + כפית חרדל דיז'ון (0 קלוריות!)</option>
+                        <option value="yogurt" data-cal="18" data-fat="0.5" data-name="יוגורט ביו 1.5% / יוגורט סויה ללא סוכר">יוגורט דל שומן / סויה ללא סוכר (18 קלוריות)</option>
+                        <option value="aquafaba" data-cal="5" data-fat="0" data-name="מי חומוס (אקווה פאבה) מוקצפים קלות">מי חומוס / מרק צח קר (5 קלוריות)</option>
+                        <option value="olive" data-cal="80" data-fat="9" data-name="כף שמן זית כתית מעולה + כף מים">כף שמן זית איכותי + כף מים (80 קלוריות)</option>
+                    </select>
+                </div>
+
+                <!-- שלב 2: חמיצות -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">2. בחרו חמיצות (1 כף)</label>
+                    <select id="build-acid" onchange="calculateCustomSauce()" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="lemon" data-cal="3" data-name="מיץ לימון טרי סחוט">מיץ לימון טרי סחוט (3 קלוריות)</option>
+                        <option value="acv" data-cal="2" data-name="חומץ תפוחים טבעי">חומץ תפוחים טבעי (2 קלוריות)</option>
+                        <option value="wine" data-cal="2" data-name="חומץ בן יין אדום / לבן">חומץ בן יין אדום/לבן (2 קלוריות)</option>
+                        <option value="lime" data-cal="3" data-name="מיץ ליים טרי">מיץ ליים טרי (3 קלוריות)</option>
+                    </select>
+                </div>
+
+                <!-- שלב 3: תיבול ומתיקות ללא סוכר -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">3. תוספות טעם ומרקם (0 קלוריות)</label>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                            <input type="checkbox" class="build-addon rounded text-emerald-600 focus:ring-emerald-500" value="שן שום כתושה" checked onchange="calculateCustomSauce()">
+                            <span>שום כתוש</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                            <input type="checkbox" class="build-addon rounded text-emerald-600 focus:ring-emerald-500" value="ממתיק סטיביה/אריתריטול (3 טיפות)" onchange="calculateCustomSauce()">
+                            <span>נגיעת מתיקות (ללא סוכר)</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                            <input type="checkbox" class="build-addon rounded text-emerald-600 focus:ring-emerald-500" value="עשבי תיבול קצוצים (פטרוזיליה/שמיר)" checked onchange="calculateCustomSauce()">
+                            <span>עשבי תיבול</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                            <input type="checkbox" class="build-addon rounded text-emerald-600 focus:ring-emerald-500" value="קמצוץ קסנטן גאם (להסמכה)" onchange="calculateCustomSauce()">
+                            <span>הסמכה (קסנטן גאם)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- תוצאת הרוטב המורכב -->
+            <div class="bg-emerald-900 text-white p-4 rounded-2xl mb-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs text-emerald-300 font-semibold">סיכום ערכים לכל הרוטב:</span>
+                    <div class="flex gap-3 text-xs font-bold">
+                        <span class="bg-emerald-800 px-2.5 py-1 rounded-lg"><span id="custom-cal">3</span> קלוריות</span>
+                        <span class="bg-emerald-800 px-2.5 py-1 rounded-lg">0ג' סוכר</span>
+                        <span class="bg-emerald-800 px-2.5 py-1 rounded-lg">&lt;0.5ג' פחמימה</span>
+                    </div>
+                </div>
+                <p id="custom-summary" class="text-sm text-emerald-50 leading-relaxed">
+                    ערבבו יחד: מים קרים + חרדל דיז'ון, מיץ לימון טרי סחוט, שן שום כתושה, עשבי תיבול קצוצים, מלח ופלפל שחור.
+                </p>
+            </div>
+
+            <button onclick="copyCustomSauce()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                <i data-lucide="check" class="w-4 h-4"></i>
+                העתק מתכון אישי ללוח
+            </button>
+        </div>
+    </div>
+
+    <!-- הודעת Toast צפה -->
+    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-medium flex items-center gap-2 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-msg">הפעולה בוצעה בהצלחה</span>
+    </div>
+
+    <!-- פוטר -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-slate-500 text-xs">
+        <p>נבנה באהבה לשוחרי בריאות, קיטו ותזונה דלת פחמימות • כל המתכונים ללא תוספת סוכר</p>
+    </footer>
+
+    <!-- לוגיקת האפליקציה -->
+    <script>
+        // מאגר נתוני הרטבים (דלי קלוריות, ללא סוכר, ללא פחמימות)
+        const recipesData = [
+            {
+                id: 1,
+                title: "ויניגרט חרדל דיז'ון ולימון קליל",
+                category: "vinaigrette",
+                categoryName: "ויניגרט ומרעננים",
+                isZeroCal: true,
+                prepTime: "2 דק'",
+                caloriesPerServing: 8,
+                carbsPerServing: 0.3,
+                fatPerServing: 0.4,
+                colorGradient: "from-amber-500 to-yellow-600",
+                description: "הקלאסיקה הצרפתית בגרסה סופר-רזה. החרדל יוצר אמולסיה סמיכה בלי צורך בהרבה שמן.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "חרדל דיז'ון חלק ללא סוכר", amount: 1, unit: "כפית" },
+                    { name: "מיץ לימון טרי סחוט", amount: 1.5, unit: "כפות" },
+                    { name: "חומץ תפוחים טבעי", amount: 1, unit: "כפית" },
+                    { name: "מים קרים (לדילול ויצירת נפח)", amount: 1.5, unit: "כפות" },
+                    { name: "אבקת שום, מלח ים ופלפל שחור גרוס", amount: 1, unit: "קורט" }
+                ],
+                instructions: "מכניסים את כל המרכיבים לצנצנת קטנה עם מכסה, מנערים היטב במשך 15 שניות עד לקבלת רוטב אחיד וסמיך ויוצקים על הסלט."
+            },
+            {
+                id: 2,
+                title: "רוטב שום שמיר קטיפתי (על בסיס יוגורט)",
+                category: "creamy",
+                categoryName: "קרמיים ועשירים",
+                isZeroCal: false,
+                prepTime: "3 דק'",
+                caloriesPerServing: 18,
+                carbsPerServing: 0.8,
+                fatPerServing: 0.5,
+                colorGradient: "from-emerald-500 to-teal-600",
+                description: "רוטב לבן עשיר במרקם שמנת, מושלם לסלט ירקות קצוץ, סלט חסה או לצד ירקות אנטיפסטי.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "יוגורט יווני 0% או יוגורט סויה ללא סוכר", amount: 3, unit: "כפות" },
+                    { name: "שן שום טרייה כתושה דק", amount: 1, unit: "יח'" },
+                    { name: "שמיר טרי קצוץ דק", amount: 1, unit: "כף" },
+                    { name: "מיץ לימון טרי", amount: 1, unit: "כפית" },
+                    { name: "מלח ופלפל לבן", amount: 1, unit: "קורט" }
+                ],
+                instructions: "מערבבים בקערית את היוגורט עם השום והלימון עד למרקם חלק. מוסיפים את השמיר הקצוץ והתבלינים ומערבבים שוב."
+            },
+            {
+                id: 3,
+                title: "רוטב סויה, ג'ינג'ר ושומשום אסייתי",
+                category: "asian",
+                categoryName: "ניחוח אסייתי",
+                isZeroCal: true,
+                prepTime: "3 דק'",
+                caloriesPerServing: 11,
+                carbsPerServing: 0.5,
+                fatPerServing: 0.6,
+                colorGradient: "from-rose-600 to-red-700",
+                description: "טעמי אומאמי עמוקים לסלט כרוב אסייתי או סלט מלפפונים מרענן, ללא טיפת סוכר או דבש.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "רוטב סויה מופחת נתרן (ללא סוכר)", amount: 1, unit: "כף" },
+                    { name: "חומץ אורז טבעי (ללא תוספת סוכר)", amount: 1, unit: "כף" },
+                    { name: "מים קרים", amount: 1, unit: "כף" },
+                    { name: "שמן שומשום קלוי (בשביל הארומה)", amount: 0.25, unit: "כפית" },
+                    { name: "ג'ינג'ר טרי מגורר", amount: 0.5, unit: "כפית" },
+                    { name: "טיפות סטיביה נוזלית (אופציונלי לאיזון)", amount: 2, unit: "טיפות" }
+                ],
+                instructions: "מערבבים היטב את כל הנוזלים עם הג'ינג'ר המגורר. אם רוצים נגיעה מתקתקה אופיינית למטבח האסייתי, מוסיפים 2 טיפות סטיביה."
+            },
+            {
+                id: 4,
+                title: "צ'ימיצ'ורי עשבי תיבול רענן (גרסה רזה)",
+                category: "herbs",
+                categoryName: "עשבי תיבול ושום",
+                isZeroCal: false,
+                prepTime: "5 דק'",
+                caloriesPerServing: 22,
+                carbsPerServing: 0.4,
+                fatPerServing: 2.0,
+                colorGradient: "from-green-600 to-emerald-800",
+                description: "פיצוץ של ירוק ורעננות. השתמשנו במים וחומץ להפחתת כמות השמן ב-70% תוך שמירה על הטעם המקורי.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "פטרוזיליה וכוסברה קצוצות דק", amount: 3, unit: "כפות" },
+                    { name: "חומץ בן יין אדום", amount: 1.5, unit: "כפות" },
+                    { name: "מים קרים", amount: 1, unit: "כף" },
+                    { name: "שמן זית כתית מעולה", amount: 1, unit: "כפית" },
+                    { name: "שום כתוש ואורגנו יבש", amount: 0.5, unit: "כפית" },
+                    { name: "פתיתי צ'ילי גרוס ומלח", amount: 1, unit: "קורט" }
+                ],
+                instructions: "קוצצים דק מאוד את עשבי התיבול, מערבבים עם הנוזלים והתבלינים. מומלץ לתת לרוטב לעמוד 10 דקות לספיגת טעמים."
+            },
+            {
+                id: 5,
+                title: "רוטב קיסר קליל ללא מיונז",
+                category: "creamy",
+                categoryName: "קרמיים ועשירים",
+                isZeroCal: false,
+                prepTime: "4 דק'",
+                caloriesPerServing: 24,
+                carbsPerServing: 0.6,
+                fatPerServing: 1.2,
+                colorGradient: "from-slate-600 to-slate-800",
+                description: "הטעם הממכר של סלט קיסר אמיתי עם חרדל, שום ופרמזן, בלי מאות הקלוריות של המיונז.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "יוגורט ביו 1.5% סמיך", amount: 2.5, unit: "כפות" },
+                    { name: "גבינת פרמזן מגוררת דק", amount: 1, unit: "כפית" },
+                    { name: "חרדל דיז'ון", amount: 0.5, unit: "כפית" },
+                    { name: "מיץ לימון טרי", amount: 1, unit: "כפית" },
+                    { name: "רוטב ווסטרשייר (ללא סוכר) או סויה", amount: 0.25, unit: "כפית" },
+                    { name: "שן שום קטנה כתושה ופלפל שחור", amount: 1, unit: "קורט" }
+                ],
+                instructions: "טורפים יחד את היוגורט, החרדל, הלימון והשום. מקפלים פנימה את הפרמזן ומתבלים בהרבה פלפל שחור גרוס."
+            },
+            {
+                id: 6,
+                title: "ויניגרט חומץ תפוחים, נענע ולימון (0 קלוריות)",
+                category: "vinaigrette",
+                categoryName: "ויניגרט ומרעננים",
+                isZeroCal: true,
+                prepTime: "2 דק'",
+                caloriesPerServing: 4,
+                carbsPerServing: 0.2,
+                fatPerServing: 0,
+                colorGradient: "from-teal-500 to-cyan-600",
+                description: "רוטב קיצי ומרענן במיוחד לסלט חסה, תותים/מלפפונים או סלט עלים ירוקים. 0% שומן.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "חומץ תפוחים טבעי אורגני", amount: 1.5, unit: "כפות" },
+                    { name: "מיץ לימון טרי", amount: 1, unit: "כף" },
+                    { name: "עלי נענע טריים קצוצים דק", amount: 1, unit: "כף" },
+                    { name: "מים קרים", amount: 1, unit: "כף" },
+                    { name: "ממתיק אריתריטול או סטיביה (לאיזון החמיצות)", amount: 0.25, unit: "כפית" },
+                    { name: "מלח ים דק", amount: 1, unit: "קורט" }
+                ],
+                instructions: "מערבבים את חומץ התפוחים, הלימון, המים והממתיק עד להמסה מלאה. מוסיפים את הנענע הקצוצה ומגישים קר."
+            },
+            {
+                id: 7,
+                title: "רוטב טחינה ירוקה אוורירית ודלת קלוריות",
+                category: "creamy",
+                categoryName: "קרמיים ועשירים",
+                isZeroCal: false,
+                prepTime: "4 דק'",
+                caloriesPerServing: 29,
+                carbsPerServing: 0.7,
+                fatPerServing: 2.3,
+                colorGradient: "from-lime-600 to-green-700",
+                description: "טריק גאוני: טחינה גולמית מוקצפת עם המון מים קרים, לימון ועשבי תיבול לקבלת נפח גדול במינימום קלוריות.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "טחינה גולמית מלאה", amount: 1, unit: "כפית גדושה" },
+                    { name: "מים קרים מאוד", amount: 3, unit: "כפות" },
+                    { name: "מיץ לימון טרי", amount: 1, unit: "כף" },
+                    { name: "פטרוזיליה/כוסברה קצוצה", amount: 1, unit: "כף" },
+                    { name: "שום כתוש, כמון ומלח", amount: 1, unit: "קורט" }
+                ],
+                instructions: "טורפים נמרצות את הטחינה עם הלימון והמים הקרים בעזרת מזלג או מטרפה קטנה עד שהיא מלבינה ותופחת. מוסיפים עשבי תיבול ותבלינים."
+            },
+            {
+                id: 8,
+                title: "רוטב סרירצ'ה-לימון חריף אש (ללא סוכר)",
+                category: "asian",
+                categoryName: "ניחוח אסייתי",
+                isZeroCal: true,
+                prepTime: "2 דק'",
+                caloriesPerServing: 7,
+                carbsPerServing: 0.4,
+                fatPerServing: 0.1,
+                colorGradient: "from-orange-500 to-red-600",
+                description: "לאוהבי החריף! מעורר את חילוף החומרים ונותן קיק מדהים לכל קערת ירקות או חזה עוף קר.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "רוטב צ'ילי חריף / סרירצ'ה ללא סוכר", amount: 1, unit: "כפית" },
+                    { name: "מיץ ליים או לימון טרי", amount: 1.5, unit: "כפות" },
+                    { name: "מים", amount: 1.5, unit: "כפות" },
+                    { name: "שום כתוש", amount: 0.5, unit: "כפית" },
+                    { name: "כוסברה קצוצה ומלח", amount: 1, unit: "קורט" }
+                ],
+                instructions: "מערבבים את הסרירצ'ה עם מיץ הלימון והמים לקבלת נוזל חלק, מוסיפים את השום והכוסברה ויוצקים מעל הסלט."
+            },
+            {
+                id: 9,
+                title: "רוטב אלף האיים 'פיטנס' ללא סוכר",
+                category: "creamy",
+                categoryName: "קרמיים ועשירים",
+                isZeroCal: false,
+                prepTime: "3 דק'",
+                caloriesPerServing: 21,
+                carbsPerServing: 0.9,
+                fatPerServing: 0.4,
+                colorGradient: "from-pink-500 to-rose-600",
+                description: "הרוטב שכולם אוהבים, בגרסה נקייה לחלוטין מסוכר ושומן רווי.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "יוגורט 0% שומן סמיך", amount: 2.5, unit: "כפות" },
+                    { name: "רסק עגבניות טבעי (100% עגבניות ללא סוכר)", amount: 1, unit: "כפית" },
+                    { name: "מלפפון חמוץ במלח קצוץ דקיק", amount: 1, unit: "כפית" },
+                    { name: "חומץ תפוחים", amount: 0.5, unit: "כפית" },
+                    { name: "פפריקה מתוקה, אבקת שום ומלח", amount: 1, unit: "קורט" }
+                ],
+                instructions: "מערבבים את היוגורט עם רסק העגבניות לקבלת צבע ורדרד. מוסיפים את קוביות המלפפון החמוץ והתבלינים."
+            }
+        ];
+
+        // ניהול מצב האפליקציה (State)
+        let currentCategory = 'all';
+        let showFavoritesOnly = false;
+        let favorites = JSON.parse(localStorage.getItem('zeroCarbSauceFavs')) || [1, 2];
+        let activeRecipe = null;
+        let currentServings = 2;
+
+        // אתחול ראשוני בטעינת הדף
+        document.addEventListener('DOMContentLoaded', () => {
+            updateFavCount();
+            renderRecipes();
+            calculateCustomSauce();
+            lucide.createIcons();
+        });
+
+        // רינדור כרטיסיות המתכונים
+        function renderRecipes() {
+            const grid = document.getElementById('recipes-grid');
+            const emptyState = document.getElementById('empty-state');
+            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+            
+            // הצגת/הסתרת כפתור ניקוי חיפוש
+            document.getElementById('clear-search').classList.toggle('hidden', searchQuery === '');
+
+            // סינון הנתונים
+            const filtered = recipesData.filter(recipe => {
+                // סינון מועדפים
+                if (showFavoritesOnly && !favorites.includes(recipe.id)) return false;
+                
+                // סינון קטגוריה
+                if (currentCategory === 'zero-cal' && !recipe.isZeroCal) return false;
+                if (currentCategory !== 'all' && currentCategory !== 'zero-cal' && recipe.category !== currentCategory) return false;
+
+                // סינון חיפוש טקסט
+                if (searchQuery !== '') {
+                    const inTitle = recipe.title.toLowerCase().includes(searchQuery);
+                    const inDesc = recipe.description.toLowerCase().includes(searchQuery);
+                    const inIng = recipe.ingredients.some(i => i.name.toLowerCase().includes(searchQuery));
+                    return inTitle || inDesc || inIng;
+                }
+                return true;
+            });
+
+            // עדכון מונה תוצאות
+            document.getElementById('results-count').textContent = `מציג ${filtered.length} מתכונים`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(recipe => {
+                const isFav = favorites.includes(recipe.id);
+                return `
+                <div onclick="openRecipeModal(${recipe.id})" class="group bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between">
+                    <div>
+                        <!-- חלק עליון צבעוני -->
+                        <div class="h-28 bg-gradient-to-br ${recipe.colorGradient} p-5 text-white relative flex flex-col justify-between">
+                            <div class="flex justify-between items-start">
+                                <span class="text-xs font-bold bg-black/20 backdrop-blur-md px-2.5 py-1 rounded-lg">
+                                    ${recipe.categoryName}
+                                </span>
+                                <button onclick="event.stopPropagation(); toggleFavorite(${recipe.id})" class="p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md transition-colors">
+                                    <i data-lucide="heart" class="w-4 h-4 ${isFav ? 'fill-rose-500 text-rose-500' : 'text-white'}"></i>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs font-medium text-white/90">
+                                <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> ${recipe.prepTime}</span>
+                                ${recipe.isZeroCal ? '<span class="bg-white text-emerald-800 font-extrabold px-2 py-0.5 rounded-md text-[10px]">סופר דל קלוריות</span>' : ''}
+                            </div>
+                        </div>
+
+                        <!-- תוכן הכרטיסייה -->
+                        <div class="p-5">
+                            <h4 class="text-lg font-extrabold text-slate-900 group-hover:text-emerald-600 transition-colors mb-2 leading-snug">
+                                ${recipe.title}
+                            </h4>
+                            <p class="text-slate-500 text-xs leading-relaxed line-clamp-2 mb-4">
+                                ${recipe.description}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- פס ערכים תזונתיים תחתון -->
+                    <div class="px-5 pb-5 pt-0">
+                        <div class="bg-slate-50 rounded-2xl p-3 border border-slate-100 flex items-center justify-between text-center">
+                            <div>
+                                <span class="block text-[11px] text-slate-400 font-medium">קלוריות למנה</span>
+                                <span class="text-sm font-extrabold text-emerald-600">${recipe.caloriesPerServing} קק"ל</span>
+                            </div>
+                            <div class="h-6 w-px bg-slate-200"></div>
+                            <div>
+                                <span class="block text-[11px] text-slate-400 font-medium">פחמימות</span>
+                                <span class="text-sm font-bold text-slate-700">${recipe.carbsPerServing}ג'</span>
+                            </div>
+                            <div class="h-6 w-px bg-slate-200"></div>
+                            <div>
+                                <span class="block text-[11px] text-slate-400 font-medium">סוכר</span>
+                                <span class="text-sm font-bold text-slate-700">0ג'</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        // החלפת קטגוריה
+        function setCategory(cat) {
+            currentCategory = cat;
+            showFavoritesOnly = false;
+            updateFavButtonUI();
+
+            // עדכון עיצוב כפתורי הקטגוריה
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = "cat-btn active shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-emerald-600 text-white shadow-md shadow-emerald-600/20";
+                    document.getElementById('results-title').textContent = btn.textContent.trim();
+                } else {
+                    btn.className = "cat-btn shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200";
+                }
+            });
+
+            renderRecipes();
+        }
+
+        // סינון חיפוש
+        function filterRecipes() {
+            renderRecipes();
+        }
+
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            renderRecipes();
+        }
+
+        function resetAllFilters() {
+            document.getElementById('search-input').value = '';
+            setCategory('all');
+        }
+
+        // ניהול מועדפים
+        function toggleFavorite(id) {
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(favId => favId !== id);
+                showToast("הוסר מהמועדפים");
+            } else {
+                favorites.push(id);
+                showToast("נשמר במועדפים!");
+            }
+            localStorage.setItem('zeroCarbSauceFavs', JSON.stringify(favorites));
+            updateFavCount();
+            renderRecipes();
+            if (activeRecipe && activeRecipe.id === id) {
+                updateModalFavIcon();
+            }
+        }
+
+        function toggleFavoritesFilter() {
+            showFavoritesOnly = !showFavoritesOnly;
+            updateFavButtonUI();
+            if (showFavoritesOnly) {
+                document.getElementById('results-title').textContent = "הרטבים המועדפים שלי";
+            } else {
+                setCategory(currentCategory);
+                return;
+            }
+            renderRecipes();
+        }
+
+        function updateFavButtonUI() {
+            const btn = document.getElementById('fav-filter-btn');
+            if (showFavoritesOnly) {
+                btn.classList.add('ring-2', 'ring-rose-400', 'bg-rose-50');
+            } else {
+                btn.classList.remove('ring-2', 'ring-rose-400', 'bg-rose-50');
+            }
+        }
+
+        function updateFavCount() {
+            document.getElementById('fav-count').textContent = favorites.length;
+        }
+
+        // פתיחת מודאל מתכון והתאמת מנות
+        function openRecipeModal(id) {
+            activeRecipe = recipesData.find(r => r.id === id);
+            if (!activeRecipe) return;
+
+            currentServings = activeRecipe.baseServings;
+
+            document.getElementById('modal-header-bg').className = `p-6 text-white relative bg-gradient-to-br ${activeRecipe.colorGradient}`;
+            document.getElementById('modal-category').textContent = activeRecipe.categoryName;
+            document.getElementById('modal-prep-time').innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5"></i> ${activeRecipe.prepTime}`;
+            document.getElementById('modal-title').textContent = activeRecipe.title;
+            document.getElementById('modal-desc').textContent = activeRecipe.description;
+            document.getElementById('modal-instructions').textContent = activeRecipe.instructions;
+
+            updateModalServingsAndMacros();
+            updateModalFavIcon();
+
+            document.getElementById('recipe-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function changeServings(delta) {
+            const next = currentServings + delta;
+            if (next >= 1 && next <= 20) {
+                currentServings = next;
+                updateModalServingsAndMacros();
+            }
+        }
+
+        function updateModalServingsAndMacros() {
+            const ratio = currentServings / activeRecipe.baseServings;
+            document.getElementById('servings-display').textContent = currentServings;
+            
+            // חישוב ערכים לכל הכמות שנבחרה
+            const totalCal = Math.round(activeRecipe.caloriesPerServing * currentServings);
+            const totalCarbs = (activeRecipe.carbsPerServing * currentServings).toFixed(1);
+            const totalFat = (activeRecipe.fatPerServing * currentServings).toFixed(1);
+
+            document.getElementById('modal-cal').textContent = totalCal;
+            document.getElementById('modal-carbs').textContent = `${totalCarbs}ג'`;
+            document.getElementById('modal-fat').textContent = `${totalFat}ג'`;
+
+            // עדכון כמויות המצרכים
+            const ingList = document.getElementById('modal-ingredients');
+            ingList.innerHTML = activeRecipe.ingredients.map(ing => {
+                let scaledAmount = ing.amount * ratio;
+                // עיגול יפה למספרים
+                scaledAmount = Number.isInteger(scaledAmount) ? scaledAmount : Number(scaledAmount.toFixed(2));
+                
+                return `
+                <li class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+                    <span class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        ${ing.name}
+                    </span>
+                    <span class="font-bold text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-lg text-xs">
+                        ${scaledAmount} ${ing.unit}
+                    </span>
+                </li>`;
+            }).join('');
+        }
+
+        function toggleCurrentModalFav() {
+            if (activeRecipe) {
+                toggleFavorite(activeRecipe.id);
+            }
+        }
+
+        function updateModalFavIcon() {
+            const btn = document.getElementById('modal-fav-btn');
+            const isFav = favorites.includes(activeRecipe.id);
+            btn.innerHTML = `<i data-lucide="heart" class="w-5 h-5 ${isFav ? 'fill-rose-500 text-rose-500' : 'text-slate-600'}"></i>`;
+            lucide.createIcons();
+        }
+
+        // העתקת מתכון ללוח
+        function copyRecipeToClipboard() {
+            if (!activeRecipe) return;
+            const ratio = currentServings / activeRecipe.baseServings;
+            const ingsText = activeRecipe.ingredients.map(i => {
+                let amt = i.amount * ratio;
+                amt = Number.isInteger(amt) ? amt : Number(amt.toFixed(2));
+                return `- ${i.name}: ${amt} ${i.unit}`;
+            }).join('\n');
+
+            const fullText = `🥗 ${activeRecipe.title} (${currentServings} כפות)\nקלוריות: ${Math.round(activeRecipe.caloriesPerServing * currentServings)} | 0 סוכר\n\nמצרכים:\n${ingsText}\n\nהכנה:\n${activeRecipe.instructions}`;
+            
+            copyTextFallback(fullText);
+            showToast("המתכון הועתק ללוח!");
+        }
+
+        // מעבדת הרכבת רוטב אישי
+        function openCustomBuilder() {
+            document.getElementById('builder-modal').classList.remove('hidden');
+            calculateCustomSauce();
+        }
+
+        function calculateCustomSauce() {
+            const baseSelect = document.getElementById('build-base');
+            const acidSelect = document.getElementById('build-acid');
+            
+            const baseOpt = baseSelect.options[baseSelect.selectedIndex];
+            const acidOpt = acidSelect.options[acidSelect.selectedIndex];
+
+            const baseCal = parseInt(baseOpt.dataset.cal);
+            const acidCal = parseInt(acidOpt.dataset.cal);
+            const totalCal = baseCal + acidCal;
+
+            const addons = Array.from(document.querySelectorAll('.build-addon:checked')).map(cb => cb.value);
+
+            document.getElementById('custom-cal').textContent = totalCal;
+            
+            let text = `ערבבו יחד בצנצנת: ${baseOpt.dataset.name}, ${acidOpt.dataset.name}`;
+            if (addons.length > 0) {
+                text += `, ${addons.join(', ')}`;
+            }
+            text += `, מלח ים ופלפל שחור לפי הטעם.`;
+            
+            document.getElementById('custom-summary').textContent = text;
+        }
+
+        function copyCustomSauce() {
+            const summary = document.getElementById('custom-summary').textContent;
+            const cal = document.getElementById('custom-cal').textContent;
+            const text = `🥗 הרוטב האישי שלי (${cal} קלוריות בלבד, 0 סוכר):\n${summary}`;
+            copyTextFallback(text);
+            showToast("המתכון האישי הועתק!");
+            closeModal('builder-modal');
+        }
+
+        // פונקציות עזר
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function copyTextFallback(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Copy failed', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2500);
+        }
+
+        // סגירת מודאלים בלחיצה על הרקע
+        window.onclick = function(event) {
+            if (event.target.id === 'recipe-modal') closeModal('recipe-modal');
+            if (event.target.id === 'builder-modal') closeModal('builder-modal');
+        }
+    </script>
+</body>
+</html>
