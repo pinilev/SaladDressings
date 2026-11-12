@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZeroCarb Sauce - רטבים לסלט דלי קלוריות וללא פחמימות</title>
+    <!-- אייקון Favicon מותאם אישית -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23059669'/%3E%3Cpath d='M44 20C30 20 20 30 20 44c0 1.1.9 2 2 2 14 0 24-10 24-24 0-1.1-.9-2-2-2z' fill='none' stroke='%23ffffff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M20 44L34 30' stroke='%23ffffff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
     <!-- טעינת Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- טעינת גופן Heebo מותאם לעברית -->
@@ -80,7 +82,7 @@
         <!-- סינון לפי קטגוריות -->
         <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar" id="category-filters">
             <button onclick="setCategory('all')" data-cat="all" class="cat-btn active shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-emerald-600 text-white shadow-md shadow-emerald-600/20">
-                הכל (12)
+                הכל (16)
             </button>
             <button onclick="setCategory('vinaigrette')" data-cat="vinaigrette" class="cat-btn shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
                 ויניגרט ומרעננים
@@ -102,7 +104,7 @@
         <!-- סטטוס תוצאות -->
         <div class="flex justify-between items-center mb-6">
             <h3 id="results-title" class="text-lg font-bold text-slate-800">כל הרטבים</h3>
-            <span id="results-count" class="text-sm text-slate-500 font-medium">מציג 12 מתכונים</span>
+            <span id="results-count" class="text-sm text-slate-500 font-medium">מציג 15 מתכונים</span>
         </div>
 
         <!-- רשת כרטיסיות מתכונים -->
@@ -510,6 +512,169 @@
                     { name: "פפריקה מתוקה, אבקת שום ומלח", amount: 1, unit: "קורט" }
                 ],
                 instructions: "מערבבים את היוגורט עם רסק העגבניות לקבלת צבע ורדרד. מוסיפים את קוביות המלפפון החמוץ והתבלינים."
+            },
+            {
+                id: 10,
+                title: "ויניגרט לימון ועשבי תיבול ללא שמן (על בסיס אקווה-פאבה)",
+                category: "vinaigrette",
+                categoryName: "ויניגרט ומרעננים",
+                isZeroCal: true,
+                prepTime: "5 דק'",
+                caloriesPerServing: 12,
+                carbsPerServing: 0.6,
+                fatPerServing: 0.2,
+                colorGradient: "from-yellow-500 to-amber-600",
+                description: "מותאם מ-Watch Learn Eat: תחליף שמן גאוני ממי חומוס (אקווה-פאבה), שמרי בירה וטרגון. מותאם ל-0 סוכר (ללא מייפל).",
+                baseServings: 2,
+                ingredients: [
+                    { name: "מי חומוס (אקווה-פאבה מקופסת שימורים)", amount: 1.5, unit: "כפות" },
+                    { name: "מיץ לימון טרי סחוט + מעט גרידת לימון", amount: 1, unit: "כף" },
+                    { name: "חומץ בן יין אדום", amount: 2, unit: "כפיות" },
+                    { name: "חרדל דיז'ון חלק", amount: 2, unit: "כפיות" },
+                    { name: "שמרי בירה (Nutritional Yeast) לארומה עשירה", amount: 1, unit: "כפית" },
+                    { name: "בצל שאלוט, פטרוזיליה, עירית וטרגון יבש", amount: 1, unit: "כף" },
+                    { name: "סטיביה נוזלית (החלפה למייפל המקורי) ומלח פלפל", amount: 2, unit: "טיפות" }
+                ],
+                instructions: "מכניסים את כל המרכיבים לבלנדר קטן או מעבד מזון וטוחנים עד לקבלת ויניגרט חלק, סמיך ואחיד ללא טיפת שמן."
+            },
+            {
+                id: 11,
+                title: "רוטב ראנץ' קרמי ללא שמן (על בסיס טופו משי)",
+                category: "creamy",
+                categoryName: "קרמיים ועשירים",
+                isZeroCal: false,
+                prepTime: "5 דק'",
+                caloriesPerServing: 19,
+                carbsPerServing: 0.7,
+                fatPerServing: 0.8,
+                colorGradient: "from-sky-500 to-blue-600",
+                description: "מותאם מ-Watch Learn Eat: רוטב ראנץ' עשיר, סמיך וטבעוני ללא שמן וללא סוכר, על בסיס טופו משי ועשבי תיבול.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "טופו משי רך (מסונן מנוזלים)", amount: 50, unit: "גרם" },
+                    { name: "חלב סויה ללא סוכר", amount: 1, unit: "כפית" },
+                    { name: "חומץ תפוחים + מיץ לימון טרי", amount: 1, unit: "כפית" },
+                    { name: "מי חומוס (אקווה-פאבה)", amount: 1, unit: "כפית" },
+                    { name: "אבקת חרדל, אבקת שום ואבקת בצל", amount: 0.25, unit: "כפית" },
+                    { name: "פטרוזיליה יבשה, שמיר יבש, עירית, מלח ופלפל לבן", amount: 0.5, unit: "כפית" }
+                ],
+                instructions: "טוחנים בבלנדר מוט את טופו המשי, חלב הסויה, החומץ, הלימון ואקווה-פאבה למרקם מיונז חלק. מערבבים פנימה את כל התבלינים ומקררים שעה להסמכה."
+            },
+            {
+                id: 12,
+                title: "רוטב גבינה כחולה קרמי ללא שמן (טבעוני ודל קלוריות)",
+                category: "creamy",
+                categoryName: "קרמיים ועשירים",
+                isZeroCal: false,
+                prepTime: "10 דק'",
+                caloriesPerServing: 21,
+                carbsPerServing: 0.9,
+                fatPerServing: 1.0,
+                colorGradient: "from-indigo-500 to-blue-700",
+                description: "מותאם מ-Watch Learn Eat: גרסת 21 קלוריות בלבד לרוטב גבינה כחולה קלאסי, עם קוביות טופו קטנות למרקם אותנטי וללא סוכר.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "טופו משי רך (מסונן)", amount: 45, unit: "גרם" },
+                    { name: "טופו קשה מפורר דק (למרקם הגבינה)", amount: 15, unit: "גרם" },
+                    { name: "חלב סויה ללא סוכר + חומץ תפוחים", amount: 1.5, unit: "כפיות" },
+                    { name: "שמרי בירה (Nutritional Yeast) וחרדל דיז'ון", amount: 1, unit: "כפית" },
+                    { name: "רוטב סויה מופחת נתרן או ווסטרשייר ללא סוכר", amount: 0.25, unit: "כפית" },
+                    { name: "אבקת שום, אבקת בצל, מלח ופלפל שחור", amount: 0.25, unit: "כפית" }
+                ],
+                instructions: "טוחנים את טופו המשי עם הנוזלים, החרדל, שמרי הבירה והתבלינים לקרם חלק. מקפלים פנימה בעדינות את פירורי הטופו הקשה ומקררים שעתיים."
+            },
+            {
+                id: 13,
+                title: "רוטב ג'ינג'ר וכורכום זהוב (גרסת 0 סוכר)",
+                category: "asian",
+                categoryName: "ניחוח אסייתי",
+                isZeroCal: false,
+                prepTime: "5 דק'",
+                caloriesPerServing: 35,
+                carbsPerServing: 0.9,
+                fatPerServing: 2.5,
+                colorGradient: "from-amber-500 to-orange-600",
+                description: "מותאם מ-My Quiet Kitchen (חיקוי טריידר ג'ו): אנטי-דלקתי, ללא שמן ועם חמאת שקדים טבעית. הומר לסטיביה במקום מייפל.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "חמאת שקדים טבעית חלקה (100% שקדים ללא סוכר)", amount: 1.5, unit: "כפיות" },
+                    { name: "מים קרים", amount: 1.5, unit: "כפות" },
+                    { name: "מיץ לימון טרי + מעט גרידת לימון", amount: 2, unit: "כפיות" },
+                    { name: "ג'ינג'ר טרי מגורר דק", amount: 0.5, unit: "כפית" },
+                    { name: "כורכום טחון", amount: 0.25, unit: "כפית" },
+                    { name: "שן שום כתושה, מלח, פלפל ו-2 טיפות סטיביה", amount: 1, unit: "קורט" }
+                ],
+                instructions: "טוחנים בבלנדר או טורפים היטב בקערית את חמאת השקדים עם המים והלימון עד לקבלת רוטב זהוב וקטיפתי."
+            },
+            {
+                id: 14,
+                title: "רוטב אבוקדו-ליים ראנץ' קליל",
+                category: "creamy",
+                categoryName: "קרמיים ועשירים",
+                isZeroCal: false,
+                prepTime: "5 דק'",
+                caloriesPerServing: 34,
+                carbsPerServing: 0.5,
+                fatPerServing: 3.1,
+                colorGradient: "from-lime-500 to-emerald-600",
+                description: "מותאם מ-Watch Learn Eat: שילוב מנצח של אבוקדו טרי עם בסיס יוגורט/טופו דל קלוריות, ליים וכוסברה (ללא מיונז עתיר קלוריות).",
+                baseServings: 2,
+                ingredients: [
+                    { name: "אבוקדו בשל", amount: 0.25, unit: "יח'" },
+                    { name: "יוגורט 0% או רוטב ראנץ' טופו דל קלוריות", amount: 2, unit: "כפות" },
+                    { name: "מיץ ליים או לימון טרי", amount: 2, unit: "כפיות" },
+                    { name: "עלי כוסברה טריים", amount: 1, unit: "כף" },
+                    { name: "אבקת שום, מלח ים ופלפל שחור", amount: 1, unit: "קורט" }
+                ],
+                instructions: "טוחנים את כל המרכיבים במעבד מזון או בלנדר מוט עד לקבלת רוטב ירוק, חלק וסמיך במיוחד."
+            },
+            {
+                id: 15,
+                title: "ויניגרט איטלקי קלאסי דל-שמן",
+                category: "herbs",
+                categoryName: "עשבי תיבול ושום",
+                isZeroCal: false,
+                prepTime: "3 דק'",
+                caloriesPerServing: 38,
+                carbsPerServing: 0.4,
+                fatPerServing: 3.8,
+                colorGradient: "from-emerald-600 to-green-700",
+                description: "מותאם מ-Connoisseurus Veg: המתכון המקורי מכיל חצי כוס שמן זית (152 קק״ל למנה) – חתכנו את השמן בחצי והוספנו מים קרים לשמירה על הנפח והטעם.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "חומץ בן יין אדום", amount: 1.5, unit: "כפות" },
+                    { name: "שמן זית כתית מעולה (מופחת)", amount: 1, unit: "כפית" },
+                    { name: "מים קרים (להפחתת דחיסות קלורית)", amount: 1, unit: "כף" },
+                    { name: "חרדל דיז'ון חלק", amount: 0.5, unit: "כפית" },
+                    { name: "תערובת תיבול איטלקי (אורגנו, בזיליקום, טימין)", amount: 0.5, unit: "כפית" },
+                    { name: "אבקת שום, אבקת בצל, מלח ופלפל שחור", amount: 0.25, unit: "כפית" }
+                ],
+                instructions: "מכניסים הכל לצנצנת סגורה ומנערים נמרצות במשך 20 שניות עד לקבלת אמולסיה עשירה בתבלינים."
+            },
+            {
+                id: 16,
+                title: "רוטב איטלקי ללא שמן על בסיס מי חומוס ומיסו",
+                category: "herbs",
+                categoryName: "עשבי תיבול ושום",
+                isZeroCal: true,
+                prepTime: "5 דק'",
+                caloriesPerServing: 9,
+                carbsPerServing: 0.7,
+                fatPerServing: 0.1,
+                colorGradient: "from-emerald-500 to-green-600",
+                description: "מותאם מ-My Quiet Kitchen: רוטב איטלקי עשיר באומאמי ממי חומוס, מיסו לבן, שמרי בירה ותבלינים איטלקיים – ללא טיפת שמן וללא סוכר (המייפל הוחלף בסטיביה).",
+                baseServings: 2,
+                ingredients: [
+                    { name: "מי חומוס (אקווה-פאבה מקופסת שימורים)", amount: 1.5, unit: "כפות" },
+                    { name: "מיץ לימון טרי סחוט", amount: 1, unit: "כף" },
+                    { name: "חומץ בן יין לבן", amount: 1.5, unit: "כפיות" },
+                    { name: "ממרח מיסו לבן עדין", amount: 1, unit: "כפית" },
+                    { name: "שמרי בירה (Nutritional Yeast)", amount: 0.75, unit: "כפית" },
+                    { name: "פטרוזיליה טרייה קצוצה דק", amount: 1.5, unit: "כפיות" },
+                    { name: "שום כתוש, אורגנו יבש ובזיליקום יבש", amount: 0.25, unit: "כפית" },
+                    { name: "סטיביה נוזלית (החלפה למייפל), מלח ים ופלפל שחור", amount: 2, unit: "טיפות" }
+                ],
+                instructions: "טורפים בקערית את מי החומוס, מיץ הלימון, החומץ והמיסו עד שהמיסו נמס לחלוטין. מוסיפים את שאר התבלינים ועשבי התיבול, טורפים היטב ומקררים כשעה לספיגת טעמים."
             }
         ];
 
