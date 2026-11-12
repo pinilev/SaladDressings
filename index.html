@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZeroCarb Sauce - רטבים לסלט דלי קלוריות וללא פחמימות</title>
+    <title>רטבים לסלט</title>
     <!-- אייקון Favicon מותאם אישית -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23059669'/%3E%3Cpath d='M44 20C30 20 20 30 20 44c0 1.1.9 2 2 2 14 0 24-10 24-24 0-1.1-.9-2-2-2z' fill='none' stroke='%23ffffff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M20 44L34 30' stroke='%23ffffff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
     <!-- טעינת Tailwind CSS -->
@@ -45,8 +45,8 @@
                     <i data-lucide="leaf" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-extrabold tracking-tight text-slate-900 leading-none">קליל & טעים</h1>
-                    <span class="text-xs font-medium text-emerald-600">רטבים דלי קלוריות • 0 סוכר • 0 פחמימות</span>
+                    <h1 class="text-xl font-extrabold tracking-tight text-slate-900 leading-none">רטבים לסלט</h1>
+                    <span class="text-xs font-medium text-emerald-600">דלי קלוריות • 0 סוכר • 0 פחמימות</span>
                 </div>
             </div>
             
@@ -67,22 +67,10 @@
     <!-- תוכן ראשי -->
     <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- שורת חיפוש -->
-        <div class="relative max-w-xl mx-auto mb-6">
-            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
-                <i data-lucide="search" class="w-5 h-5"></i>
-            </div>
-            <input type="text" id="search-input" oninput="filterRecipes()" placeholder="חפשו רוטב או מרכיב (למשל: חרדל, שום, נענע, טחינה...)" 
-                class="w-full pr-12 pl-10 py-3 rounded-2xl bg-white text-slate-800 placeholder-slate-400 border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm sm:text-base transition-all">
-            <button id="clear-search" onclick="clearSearch()" class="hidden absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600">
-                <i data-lucide="x-circle" class="w-5 h-5"></i>
-            </button>
-        </div>
-
         <!-- סינון לפי קטגוריות -->
         <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar" id="category-filters">
             <button onclick="setCategory('all')" data-cat="all" class="cat-btn active shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-emerald-600 text-white shadow-md shadow-emerald-600/20">
-                הכל (16)
+                הכל (18)
             </button>
             <button onclick="setCategory('vinaigrette')" data-cat="vinaigrette" class="cat-btn shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
                 ויניגרט ומרעננים
@@ -675,6 +663,52 @@
                     { name: "סטיביה נוזלית (החלפה למייפל), מלח ים ופלפל שחור", amount: 2, unit: "טיפות" }
                 ],
                 instructions: "טורפים בקערית את מי החומוס, מיץ הלימון, החומץ והמיסו עד שהמיסו נמס לחלוטין. מוסיפים את שאר התבלינים ועשבי התיבול, טורפים היטב ומקררים כשעה לספיגת טעמים."
+            },
+            {
+                id: 17,
+                title: "רוטב טחינה קלאסי מוקצף (שום-לימון דל קלוריות)",
+                category: "creamy",
+                categoryName: "קרמיים ועשירים",
+                isZeroCal: false,
+                prepTime: "3 דק'",
+                caloriesPerServing: 28,
+                carbsPerServing: 0.6,
+                fatPerServing: 2.3,
+                colorGradient: "from-amber-400 to-stone-600",
+                description: "רוטב טחינה קלאסי, חלק ואוורירי שמוקצף עם מים קרים מאוד ולימון סחוט לקבלת מרקם קטיפתי ונפח גדול במינימום קלוריות.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "טחינה גולמית איכותית (100% שומשום)", amount: 1, unit: "כפית גדושה" },
+                    { name: "מים קרים מאוד (מהמקרר)", amount: 3, unit: "כפות" },
+                    { name: "מיץ לימון טרי סחוט", amount: 1, unit: "כף" },
+                    { name: "שן שום קטנה כתושה", amount: 0.5, unit: "יח'" },
+                    { name: "מלח ים דק וקמצוץ כמון", amount: 1, unit: "קורט" }
+                ],
+                instructions: "מערבבים בקערית את הטחינה הגולמית עם מיץ הלימון והשום. מוסיפים בהדרגה את המים הקרים תוך כדי טריפה נמרצת במזלג או מטרפה עד שהטחינה מלבינה והופכת לרוטב חלק ואוורירי."
+            },
+            {
+                id: 18,
+                title: "ויניגרט בלסמי קלאסי 'לייט' (ללא תוספת סוכר)",
+                category: "vinaigrette",
+                categoryName: "ויניגרט ומרעננים",
+                isZeroCal: true,
+                prepTime: "2 דק'",
+                caloriesPerServing: 15,
+                carbsPerServing: 1.2,
+                fatPerServing: 0.7,
+                colorGradient: "from-purple-800 to-stone-900",
+                description: "הפתרון המושלם לאוהבי הבלסמי: שימוש בכמות מדויקת של חומץ בלסמי אמיתי מדולל במים, חרדל וסטיביה (במקום דבש/מייפל) לקבלת טעם עשיר במינימום קלוריות ופחמימות.",
+                baseServings: 2,
+                ingredients: [
+                    { name: "חומץ בלסמי איכותי (ללא קרמל/סוכר מוסף)", amount: 1, unit: "כף" },
+                    { name: "מים קרים (להגדלת הנפח ודילול הפחמימות)", amount: 1.5, unit: "כפות" },
+                    { name: "שמן זית כתית מעולה", amount: 0.5, unit: "כפית" },
+                    { name: "חרדל דיז'ון חלק (להסמכה ואמולסיה)", amount: 1, unit: "כפית" },
+                    { name: "שן שום קטנה כתושה + אורגנו יבש", amount: 0.5, unit: "כפית" },
+                    { name: "טיפות סטיביה נוזלית (להדגשת המתיקות הטבעית)", amount: 2, unit: "טיפות" },
+                    { name: "מלח ים ופלפל שחור גרוס", amount: 1, unit: "קורט" }
+                ],
+                instructions: "מכניסים את כל המרכיבים לצנצנת קטנה, סוגרים ומנערים נמרצות במשך 15 שניות עד שהחרדל קושר את הבלסמי והמים לרוטב סמיך ומבריק."
             }
         ];
 
@@ -697,10 +731,6 @@
         function renderRecipes() {
             const grid = document.getElementById('recipes-grid');
             const emptyState = document.getElementById('empty-state');
-            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
-            
-            // הצגת/הסתרת כפתור ניקוי חיפוש
-            document.getElementById('clear-search').classList.toggle('hidden', searchQuery === '');
 
             // סינון הנתונים
             const filtered = recipesData.filter(recipe => {
@@ -711,13 +741,6 @@
                 if (currentCategory === 'zero-cal' && !recipe.isZeroCal) return false;
                 if (currentCategory !== 'all' && currentCategory !== 'zero-cal' && recipe.category !== currentCategory) return false;
 
-                // סינון חיפוש טקסט
-                if (searchQuery !== '') {
-                    const inTitle = recipe.title.toLowerCase().includes(searchQuery);
-                    const inDesc = recipe.description.toLowerCase().includes(searchQuery);
-                    const inIng = recipe.ingredients.some(i => i.name.toLowerCase().includes(searchQuery));
-                    return inTitle || inDesc || inIng;
-                }
                 return true;
             });
 
@@ -819,7 +842,6 @@
         }
 
         function resetAllFilters() {
-            document.getElementById('search-input').value = '';
             setCategory('all');
         }
 
